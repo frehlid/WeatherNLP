@@ -4,6 +4,9 @@
 */
 
 
+% database is loaded from
+:- [database].
+
 % ------------ Current usage -------------
 % ?- ask(["Is", "Vancouver", "cold", "?"], A, C).
 % A = cold(vancouver) ;
@@ -122,6 +125,7 @@ prove_all(_,[H|T],A, Ind) :-
 
 % To get the input from a line:
 q(Ans) :-
+    add_facts_to_database(_),
     write("Ask me: "), flush_output(current_output),
     read_line_to_string(user_input, St),
     split_string(St, " -", " ,?.!-", Ln), % ignore punctuation
@@ -130,15 +134,15 @@ q(Ans) :-
     write("No more answers\n"),
     q(Ans).
 
-% ---------------- Database ----------------
+% ---------------- Predicates about weather ----------------
 % ----- Interpretations about the weather to answer questions -----
 % cold(C) is true if the temperature is T and it is below 10 degrees.
-cold(T) :- temperature(T), T < 10.
+cold(_) :- temperature(T), T =< 10.0.
 
 % warm(C) is true if the temperature is T and it is above 10 degrees
-warm(T) :- temperature(T), T > 10.
+warm(_) :- temperature(T), T > 10.
 
-windy(S) :- wind_speed(S), S > 10.
+windy(_) :- wind_speed(S), S > 10.
 
 % humid(C) is true if the humidity in C is above 50%
 humid(H) :- humidity(_, H), H > 50.
@@ -146,37 +150,4 @@ humid(H) :- humidity(_, H), H > 50.
 % umbrella(C) is true if the chance of rain is above
 umbrella(R) :- chance_rain(_, R), R > 50.
 
-% ------ FACTS ABOUT THE WEATHER FROM API ------
 
-% location(l) is true if the user is asking about city l
-:- dynamic(location/1).
-location(vancouver).
-
-% temperature(n) is true if it is n degrees .
-:- dynamic(temperature/1).
-temperature(0).
-
-% temperature(s) is true if the wind is moving s kph outside.
-:- dynamic(wind_speed/1).
-wind_speed(0).
-
-% humidity(C, H) is true if the humidity in C is H
-humidity(vancouver, 12).
-
-% pressure(C, P) is true if the pressure in C is P
-pressure(vancouver, 13).
-
-% feels_like(C, F) is true if the feels like temperature in C is F
-feels_like(vancouver, 14).
-
-% sunrise(C, S) is true if the sunrise time in C is S
-sunrise(vancouver, 15).
-
-% sunset(C, S) is true if the sunset time in C is S
-sunset(vancouver, 16).
-
-% dew_point(C, D) is true if the dew point in C is D
-dew_point(vancouver, 17).
-
-% uv_index(C, U) is true if the UV index in C is U
-uv_index(vancouver, 18).
