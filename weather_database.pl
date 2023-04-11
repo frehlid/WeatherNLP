@@ -93,8 +93,10 @@ noun(["ultraviolet" | L],L,Ind, [uv(Ind) | C],C).
 noun(["cloud" | L],L,Ind, [cloud(Ind) | C],C).
 noun(["cloud cover" | L], L, Ind, [cloud(Ind) | C],C).
 noun(["precipitation" | L],L,Ind, [precipitation(Ind) | C],C).
+noun(["chance", "of", "rain" | L],L,Ind, [chance_of_rain(Ind) | C],C).
+noun(["chance", "of", "snow" | L],L,Ind, [chance_of_snow(Ind) | C],C).
 noun(["chance of rain" | L],L,Ind, [chance_of_rain(Ind) | C],C).
-noun(["chance of snow" | L],L,Ind, [chance_of_rain(Ind) | C],C).
+noun(["chance of snow" | L],L,Ind, [chance_of_snow(Ind) | C],C).
 noun(["rain" | L],L,Ind, [rain(Ind) | C],C).
 noun(["snow" | L],L,Ind, [snow(Ind) | C],C).
 
