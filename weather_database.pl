@@ -95,6 +95,8 @@ noun(["cloud cover" | L], L, Ind, [cloud(Ind) | C],C).
 noun(["precipitation" | L],L,Ind, [precipitation(Ind) | C],C).
 noun(["chance of rain" | L],L,Ind, [chance_of_rain(Ind) | C],C).
 noun(["chance of snow" | L],L,Ind, [chance_of_rain(Ind) | C],C).
+noun(["rain" | L],L,Ind, [rain(Ind) | C],C).
+noun(["snow" | L],L,Ind, [snow(Ind) | C],C).
 
 % nouns can also be personal items
 % noun is true if the first word in L is a noun, and the corresponding fact is in the database
@@ -105,6 +107,11 @@ noun(["raincoat" | L], L, Ind, [raincoat(Ind) | C], C).
 noun(["sunglasses" | L], L, Ind, [sunny(Ind) | C], C).
 noun(["sunscreen" | L], L, Ind, [sunscreen(Ind) | C], C).
 noun(["hat" | L], L, Ind, [hat(Ind) | C], C).
+noun(["gloves" | L], L, Ind, [gloves(Ind) | C], C).
+noun(["scarf" | L], L, Ind, [scarf(Ind) | C], C).
+noun(["boots" | L], L, Ind, [boots(Ind) | C], C).
+noun(["jacket" | L], L, Ind, [jacket(Ind) | C], C).
+
 
 % verb_prhase is true is true if the phrase is "is it". Used for How questions.
 verb_phrase(["is", "it" | L], L, _, C, C).
@@ -145,6 +152,10 @@ question(["should", "i", "bring" | L0],L1,Ind,C0,C1) :-
     noun_phrase(L0, L1, Ind, C0, C1).
 question(["should", "i", "wear" | L0],L1,Ind,C0,C1) :-
     noun_phrase(L0, L1, Ind, C0, C1).
+
+% questions that start with "will it" are followed by a noun
+question(["will", "it" | L0],L1,Ind,C0,C1) :-
+	noun(L0,L1,Ind,C0,C1).
 
 % questions that start with "how" are followed by an adjective and a verb phrase
 question(["how" | L0],L2,Ind,C0,C2) :-
@@ -190,6 +201,25 @@ prove_all(["is"| _],[Last],_, _) :-
     noun([Noun | _], _, _, [Constraint | _], _),
     explanation(Noun, Constraint, Val, PrintExp), 
     write(PrintExp), flush_output(current_output). 
+
+% if the question starts with "will it", is a yes or no question
+% no explanation is given, as the question is boolean
+% "NO" case
+prove_all(["will", "it" | _],[Last],_, _) :-
+	\+ call(Last), % constraint is not true
+	noun([Noun | _],_,_, [Last | _],_),
+	atom_concat("No, it will not ", Noun, PrintAns1), 
+	atom_concat(PrintAns1, "\n", PrintAns),
+	write(PrintAns), flush_output(current_output).
+
+% "YES" case
+prove_all(["will", "it" | _],[Last],_, _) :-
+	call(Last), % constraint is true
+	noun([Noun | _],_,_, [Last | _],_),
+	atom_concat("Yes, it will ", Noun, PrintAns1), 
+	atom_concat(PrintAns1, "\n", PrintAns),
+	write(PrintAns), flush_output(current_output).
+
 
 % questions that are related to personal items are handled by accessory_questions
 prove_all(["should", "i", "bring" | _], [Last],_, _) :-
@@ -305,6 +335,18 @@ hat(C) :- sunny(C).
 raincoat(C) :- rainy(C).
 
 sunscreen(C) :- uv(C), C > 5.
+
+gloves(C) :- cold(C).
+
+scarf(C) :- cold(C).
+
+boots(C) :- precipitation(C), C > 0.
+
+jacket(C) :- cold(C).
+
+snow(C) :- will_it_snow(C), C > 0.
+
+rain(C) :- will_it_rain(C), C > 0.
 
 
 

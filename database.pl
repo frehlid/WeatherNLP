@@ -62,11 +62,11 @@ units(humidity(_), "%").
 units(cloud(_), "%").
 units(feelslike(_), "C").
 units(visibility(_), "km").
-units(uv(_), "UV Index").
+units(uv(_), "UVI").
 units(maxtemp(_), "C").
 units(avgtemp(_), "C").
 units(mintemp(_), "C").
-units(will_it_rail(_), "0/1").
+units(will_it_rain(_), "0/1").
 units(will_it_snow(_), "0/1").
 units(chance_of_rain(_), "%").
 units(chance_of_snow(_), "%").
@@ -112,6 +112,22 @@ get_explanation("sunscreen", _, Exp) :-
 get_explanation("hat", _, Exp) :-
 	cloud(Clouds),
 	explanation("cloud cover", cloud(_), Clouds, Exp).
+
+get_explanation("gloves", _, Exp) :-
+	temperature(Temp),
+	explanation("temperature", temperature(_), Temp, Exp).
+
+get_explanation("scarf", _, Exp) :-
+	temperature(Temp),
+	explanation("temperature", temperature(_), Temp, Exp).
+
+get_explanation("boots", _, Exp) :-
+	precipitation(P),
+	explanation("precipitation", precipitation(_), P, Exp).
+
+get_explanation("jacket", _, Exp) :-
+	temperature(Temp),
+	explanation("temperature", temperature(_), Temp, Exp).
 
 % replace spaces with dashes for the API
 replace_spaces_with_dash(String, Result) :-
